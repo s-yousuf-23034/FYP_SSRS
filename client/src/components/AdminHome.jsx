@@ -28,7 +28,7 @@ import CreateAndAssignReport from './CreateAndAssignReport';
 
 
 // Import your logo image
-import logo from './hbl2.png';
+import logo from './hbl3.png';
 
 // import logo from './HBLL.png';
 
@@ -279,18 +279,6 @@ const AdminHome = () => {
           </ListItem>
           <Collapse in={openSubMenu6} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('createReport')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Create a Report" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('assignReport')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Assign a Report" />
-              </ListItem>
               <ListItem button onClick={() => handleOptionClick('create&assignReport')} sx={{ pl: 4 }}>
                 <ListItemIcon>
                   <ArrowRightIcon />
