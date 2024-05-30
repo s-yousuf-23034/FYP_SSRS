@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { AppBar, Toolbar, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Collapse, Snackbar,Paper } from "@mui/material";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -16,51 +16,45 @@ import ForgotPass from './ForgotPass';
 import MyProfile from './MyProfile';
 
 import OrganizationList from './GetListOfOrgs';
-//import organizationsData from './organizations.json';
+
 import ModifyOrganizationForm from './ModifyOrgForm';
 import AddNewCustomerForm from './AddNewCustomerForm';
 import AdminList from './TableDisplayAdmins';
-import CreateReportForm from './CreateReportForm';
-import AssignReportForm from './AssignReportForm';
-import CustomerTable from './CustomerTable';
-import CompaniesTable from './CompaniesTable';
+
+
 import CreateAndAssignReport from './CreateAndAssignReport';
+
+import ReportTable from './ReportTable';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import MuiAlert from '@mui/material/Alert';
 
 
 // Import your logo image
 import logo from './hbl3.png';
 
-// import logo from './HBLL.png';
 
 const AdminHome = () => {
-  
-  //const embedURL= "https://app.powerbi.com/view?r=eyJrIjoiYjgwZDcwNDctOTU0Yi00MWVkLWIzZDctNjliNDgyYjkwNmY5IiwidCI6ImZlZTNiOTE2LTAxYzEtNDk4Ny1hNjQ2LWUxOTM0MzJiOWVhYSIsImMiOjl9"; 
-  // const embedURL = "https://app.powerbi.com/rdlEmbed?reportId=db9215e1-d5b6-4900-8748-35a73c87550a&autoAuth=true&ctid=a1e3cc4f-47e2-4e32-a7a1-5b14136b160b";
   const [selectedOption, setSelectedOption] = useState('');
-
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-  };
-
+  const [reports, setReports] = useState([]);
+  const [reportData, setReportData] = useState(null);
+  const [currentReportName, setCurrentReportName] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user); // Get user from Redux store
+
+
+  // const dispatch = useDispatch();
   const [openSubMenu1, setOpenSubMenu1] = React.useState(false);
   const [openSubMenu2, setOpenSubMenu2] = React.useState(false);
   const [openSubMenu3, setOpenSubMenu3] = React.useState(false);
   const [openSubMenu4, setOpenSubMenu4] = React.useState(false);
   const [openSubMenu5, setOpenSubMenu5] = React.useState(false);
   const [openSubMenu6, setOpenSubMenu6] = React.useState(false);
-  // const [showAddNewAdminForm, setShowAddNewAdminForm] = useState(false);
-  // const [showModifyAdminForm, setShowModifyAdminForm] = useState(false);
-
-  // const handleAddNewAdminClick = () => {
-  //   setShowAddNewAdminForm(true);
-  // };
-
-  // const handleModifyAdminClick = () => {
-  //   setShowModifyAdminForm(true);
-  // };
-  
+ 
 
 
   const CustomAppBar = styled(AppBar)({
@@ -90,15 +84,57 @@ const AdminHome = () => {
   const handleSubMenu6Click = () => {
     setOpenSubMenu6(!openSubMenu6);
   };
-  
-
-
 
   const handleLogout = () => {
     // Handle logout logic here
     dispatch(logout());
     //navigate('/'); // Redirect to login page after logout
   };
+
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    setReportData(null); // Clear report data when changing options
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+
+  const fetchReports = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/organization-reports', {
+        organizationId: user.organization
+      });
+      setReports(response.data);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      setSnackbarMessage('Error fetching reports. Please try again.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
+  };
+
+  const fetchReportData = async (report) => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/execute-report', {
+        query: report.query
+      });
+      setReportData(response.data.data);
+      setCurrentReportName(report.name);
+      setSelectedOption('report');
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+      setSnackbarMessage('Error fetching report data. Please try again.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, [user.organization]);
 
   return (
     <div>
@@ -195,32 +231,22 @@ const AdminHome = () => {
           </Collapse>
           <ListItem button onClick={handleSubMenu3Click}>
             <ListItemIcon>
-              <ArrowDropDownIcon />
+              {openSubMenu3 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
             </ListItemIcon>
             <ListItemText primary="MIS Reports" />
           </ListItem>
           <Collapse in={openSubMenu3} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('powerBI')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Customers Report" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('powerBI2')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Companies Report" />
-              </ListItem>
-              <ListItem button sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Report 3" />
-              </ListItem>
-            </List>
-          </Collapse>
+              <List component="div" disablePadding>
+                {reports.map((report, index) => (
+                  <ListItem button key={index} sx={{ pl: 4 }} onClick={() => fetchReportData(report)}>
+                    <ListItemIcon>
+                      <ArrowRightIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={report.name} />
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
           <ListItem button onClick={handleSubMenu4Click}>
             <ListItemIcon>
               <ArrowDropDownIcon />
@@ -291,10 +317,13 @@ const AdminHome = () => {
         </List>
       </div>
 
-      <div style={{ padding: '80px', marginLeft: '220px' }}>
-      
-        {selectedOption === 'powerBI2' && <CompaniesTable/>} 
-        {selectedOption === 'powerBI' && <CustomerTable/>}        
+      <Paper elevation={3} style={{ padding: '20px', margin: '80px 20px 20px 260px', width: 'calc(100% - 280px)' }}>
+          {selectedOption === 'forgotPass' && <ForgotPass />}
+          {selectedOption === 'myProfile' && <MyProfile />}
+          {selectedOption === 'report' && reportData && <ReportTable data={reportData} reportName={currentReportName} />}
+        </Paper>
+
+      <div style={{ padding: '80px', marginLeft: '220px' }}>       
         {selectedOption === 'create&assignReport' && <CreateAndAssignReport />}
       </div>
 
@@ -308,14 +337,12 @@ const AdminHome = () => {
         {selectedOption === 'deleteAdmin' && <DeleteAdminForm />}
         {selectedOption === 'addOrg' && <AddNewOrganizationForm />}
         {selectedOption === 'getAllOrgs' && <OrganizationList/>}
-        {selectedOption === 'forgotPass' && <ForgotPass />}
-        {selectedOption === 'myProfile' && <MyProfile />}
+        {/* {selectedOption === 'forgotPass' && <ForgotPass />}
+        {selectedOption === 'myProfile' && <MyProfile />} */}
         {selectedOption === 'modifyOrg' && <ModifyOrganizationForm />}
         {selectedOption === 'addNewCustomer' && <AddNewCustomerForm />}
         {selectedOption === 'modifyExistingCustomer' && <ModifyAdminForm />}
         {selectedOption === 'adminsTable' && <AdminList />}
-        {selectedOption === 'createReport' && <CreateReportForm />}
-        {selectedOption === 'assignReport' && <AssignReportForm />}
 
         
 
@@ -323,7 +350,11 @@ const AdminHome = () => {
       </div>
 
 
-      
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };
