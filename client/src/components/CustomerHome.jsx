@@ -113,6 +113,11 @@ const CustomerHome = () => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Customer Dashboard
           </Typography>
+          {user && (
+            <Typography variant="body1" component="div" sx={{ marginRight: '20px' }}>
+              {user.email}
+            </Typography>
+          )}
           <Button color="inherit" onClick={handleLogout}>
             <ExitToAppIcon />
             Logout

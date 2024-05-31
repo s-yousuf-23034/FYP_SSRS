@@ -145,209 +145,219 @@ const AdminHome = () => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Admin Dashboard
           </Typography>
+          {user && (
+            <Typography variant="body1" component="div" sx={{ marginRight: '20px' }}>
+              {user.email}
+            </Typography>
+          )}
           <Button color="inherit" onClick={handleLogout}>
             <ExitToAppIcon />
             Logout
           </Button>
         </Toolbar>
       </CustomAppBar>
-      
-      <div style={{ width: '240px', backgroundColor: '#f0f0f0', borderRight: '1px solid #ccc', position: 'fixed', top: '64px', bottom: '0', overflowY: 'auto' }}>
-        <List>
-          {/* List items for the sidebar */}
-          <ListItem button onClick={handleSubMenu1Click}>
-            <ListItemIcon>
-              <ArrowDropDownIcon />
-            </ListItemIcon>
-            <ListItemText primary="Admin Management" />
-          </ListItem>
-          <Collapse in={openSubMenu1} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {/* <ListItem button onClick={handleAddNewAdminClick} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Add New Admin" />
-              </ListItem> */}
-              <ListItem button onClick={() => handleOptionClick('addNewAdmin')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Add New Admin" />
-              </ListItem>
-              {/* <ListItem button onClick={handleModifyAdminClick} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Modify Existent Admin" />
-              </ListItem> */}
-              <ListItem button onClick={() => handleOptionClick('modifyExistingAdmin')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Modify Existent Admin" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('deleteAdmin')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Delete Admin" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('adminsTable')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="List of Admins" />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem button onClick={handleSubMenu2Click}>
-            <ListItemIcon>
-              <ArrowDropDownIcon />
-            </ListItemIcon>
-            <ListItemText primary="User Management" />
-          </ListItem>
-          <Collapse in={openSubMenu2} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('addNewCustomer')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Add New Customer" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('modifyExistingCustomer')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Modify Existent Customer" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('deleteAdmin')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Delete Customer" />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem button onClick={handleSubMenu3Click}>
-            <ListItemIcon>
-              {openSubMenu3 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
-            </ListItemIcon>
-            <ListItemText primary="MIS Reports" />
-          </ListItem>
-          <Collapse in={openSubMenu3} timeout="auto" unmountOnExit>
+      <div style={{ display: 'flex' }}>
+        <div style={{ width: '240px', backgroundColor: '#f0f0f0', borderRight: '1px solid #ccc', position: 'fixed', top: '64px', bottom: '0', overflowY: 'auto' }}>
+          <List>
+            {/* List items for the sidebar */}
+            <ListItem button onClick={handleSubMenu1Click}>
+              <ListItemIcon>
+                {openSubMenu1 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="Admin Management" />
+            </ListItem>
+            <Collapse in={openSubMenu1} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                {reports.map((report, index) => (
-                  <ListItem button key={index} sx={{ pl: 4 }} onClick={() => fetchReportData(report)}>
-                    <ListItemIcon>
-                      <ArrowRightIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={report.name} />
-                  </ListItem>
-                ))}
+                {/* <ListItem button onClick={handleAddNewAdminClick} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Add New Admin" />
+                </ListItem> */}
+                <ListItem button onClick={() => handleOptionClick('addNewAdmin')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Add New Admin" />
+                </ListItem>
+                {/* <ListItem button onClick={handleModifyAdminClick} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Modify Existent Admin" />
+                </ListItem> */}
+                <ListItem button onClick={() => handleOptionClick('modifyExistingAdmin')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Modify Existent Admin" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('deleteAdmin')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Delete Admin" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('adminsTable')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="List of Admins" />
+                </ListItem>
               </List>
             </Collapse>
-          <ListItem button onClick={handleSubMenu4Click}>
-            <ListItemIcon>
-              <ArrowDropDownIcon />
-            </ListItemIcon>
-            <ListItemText primary="Profile Management" />
-          </ListItem>
-          <Collapse in={openSubMenu4} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('forgotPass')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Change Password" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('myProfile')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="My Profile" />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem button onClick={handleSubMenu5Click}>
-            <ListItemIcon>
-              <ArrowDropDownIcon />
-            </ListItemIcon>
-            <ListItemText primary="Organization Management" />
-          </ListItem>
-          <Collapse in={openSubMenu5} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('getAllOrgs')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="List of Organizations" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('addOrg')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Add Organization" />
-              </ListItem>
-              <ListItem button onClick={() => handleOptionClick('modifyOrg')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Modify Organization" />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem button onClick={handleSubMenu6Click}>
-            <ListItemIcon>
-              <ArrowDropDownIcon />
-            </ListItemIcon>
-            <ListItemText primary="Report Management" />
-          </ListItem>
-          <Collapse in={openSubMenu6} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleOptionClick('create&assignReport')} sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Create & Assign a Report" />
-              </ListItem>
-              
-            </List>
-          </Collapse>
-        </List>
-      </div>
+            <ListItem button onClick={handleSubMenu2Click}>
+              <ListItemIcon>
+                {openSubMenu2 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="User Management" />
+            </ListItem>
+            <Collapse in={openSubMenu2} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button onClick={() => handleOptionClick('addNewCustomer')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Add New Customer" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('modifyExistingCustomer')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Modify Existent Customer" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('deleteAdmin')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Delete Customer" />
+                </ListItem>
+              </List>
+            </Collapse>
+            <ListItem button onClick={handleSubMenu3Click}>
+              <ListItemIcon>
+                {openSubMenu3 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="MIS Reports" />
+            </ListItem>
+            <Collapse in={openSubMenu3} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {reports.map((report, index) => (
+                    <ListItem button key={index} sx={{ pl: 4 }} onClick={() => fetchReportData(report)}>
+                      <ListItemIcon>
+                        <ArrowRightIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={report.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            <ListItem button onClick={handleSubMenu4Click}>
+              <ListItemIcon>
+                {openSubMenu4 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="Profile Management" />
+            </ListItem>
+            <Collapse in={openSubMenu4} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button onClick={() => handleOptionClick('forgotPass')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Change Password" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('myProfile')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="My Profile" />
+                </ListItem>
+              </List>
+            </Collapse>
+            <ListItem button onClick={handleSubMenu5Click}>
+              <ListItemIcon>
+                {openSubMenu5 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="Organization Management" />
+            </ListItem>
+            <Collapse in={openSubMenu5} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button onClick={() => handleOptionClick('getAllOrgs')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="List of Organizations" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('addOrg')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Add Organization" />
+                </ListItem>
+                <ListItem button onClick={() => handleOptionClick('modifyOrg')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Modify Organization" />
+                </ListItem>
+              </List>
+            </Collapse>
+            <ListItem button onClick={handleSubMenu6Click}>
+              <ListItemIcon>
+                {openSubMenu6 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+              </ListItemIcon>
+              <ListItemText primary="Report Management" />
+            </ListItem>
+            <Collapse in={openSubMenu6} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button onClick={() => handleOptionClick('create&assignReport')} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Create & Assign a Report" />
+                </ListItem>
+                
+              </List>
+            </Collapse>
+          </List>
+        </div>
 
-      <Paper elevation={3} style={{ padding: '20px', margin: '80px 20px 20px 260px', width: 'calc(100% - 280px)' }}>
+        <Paper elevation={3} style={{ padding: '20px', margin: '80px 20px 20px 260px', width: 'calc(100% - 280px)' }}>
           {selectedOption === 'forgotPass' && <ForgotPass />}
           {selectedOption === 'myProfile' && <MyProfile />}
           {selectedOption === 'report' && reportData && <ReportTable data={reportData} reportName={currentReportName} />}
+          
+          {selectedOption === 'create&assignReport' && <CreateAndAssignReport />}
+          {selectedOption === 'addNewAdmin' && <AddNewAdminForm />}
+          {selectedOption === 'modifyExistingAdmin' && <ModifyAdminForm />}
+          {selectedOption === 'deleteAdmin' && <DeleteAdminForm />}
+          {selectedOption === 'addOrg' && <AddNewOrganizationForm />}
+          {selectedOption === 'getAllOrgs' && <OrganizationList/>}
+          {selectedOption === 'modifyOrg' && <ModifyOrganizationForm />}
+          {selectedOption === 'addNewCustomer' && <AddNewCustomerForm />}
+          {selectedOption === 'modifyExistingCustomer' && <ModifyAdminForm />}
+          {selectedOption === 'adminsTable' && <AdminList />}
+          {/* {selectedOption === '' && <AdminList />} */}
+
         </Paper>
-
-      <div style={{ padding: '80px', marginLeft: '220px' }}>       
-        {selectedOption === 'create&assignReport' && <CreateAndAssignReport />}
       </div>
+      {/* <div style={{ padding: '80px', marginLeft: '220px' }}>       
+        {selectedOption === 'create&assignReport' && <CreateAndAssignReport />}
+      </div> */}
 
-      <div style={{ padding: '', margin: '5px'}}>
+      {/* <div style={{ padding: '', margin: '5px'}}>
 
-        {/* Add admin-specific content here */}
-        {/* {showAddNewAdminForm && <AddNewAdminForm />} 
-        {showModifyAdminForm && <ModifyAdminForm />} */}
+        
         {selectedOption === 'addNewAdmin' && <AddNewAdminForm />}
         {selectedOption === 'modifyExistingAdmin' && <ModifyAdminForm />}
         {selectedOption === 'deleteAdmin' && <DeleteAdminForm />}
         {selectedOption === 'addOrg' && <AddNewOrganizationForm />}
         {selectedOption === 'getAllOrgs' && <OrganizationList/>}
-        {/* {selectedOption === 'forgotPass' && <ForgotPass />}
-        {selectedOption === 'myProfile' && <MyProfile />} */}
         {selectedOption === 'modifyOrg' && <ModifyOrganizationForm />}
         {selectedOption === 'addNewCustomer' && <AddNewCustomerForm />}
         {selectedOption === 'modifyExistingCustomer' && <ModifyAdminForm />}
         {selectedOption === 'adminsTable' && <AdminList />}
-
-        
-
-        
-      </div>
+      </div> */}
 
 
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
