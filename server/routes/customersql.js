@@ -7,6 +7,8 @@ import nodemailer from "nodemailer";
 import Organization from "../models/Organization.js";
 import User from "../models/User.js";
 import connectAndQuery from "../configuration/db.js";
+import archiver from "archiver";
+import streamBuffers from "stream-buffers";
 
 const router = express.Router();
 const upload = multer(); // Define the upload variable here
@@ -43,6 +45,9 @@ const getCompaniesDataHandler = async (req, res) => {
 //     return res.status(400).send("Email and file are required");
 //   }
 
+//   // Determine the file extension
+//   const fileExtension = file.originalname.split(".").pop();
+
 //   // Create a Nodemailer transporter using your email service
 //   const transporter = nodemailer.createTransport({
 //     service: "gmail", // e.g., 'gmail'
@@ -71,7 +76,7 @@ const getCompaniesDataHandler = async (req, res) => {
 //         text: "Please find attached report.",
 //         attachments: [
 //           {
-//             filename: "report.xlsx",
+//             filename: `report.${fileExtension}`, // Dynamic filename based on file extension
 //             content: file.buffer,
 //           },
 //         ],
@@ -102,6 +107,30 @@ router.post("/send-report", upload.single("file"), async (req, res) => {
   // Determine the file extension
   const fileExtension = file.originalname.split(".").pop();
 
+  // Check if file size is greater than 9 MB
+  const fileSizeInMB = file.size / (1024 * 1024);
+  let fileBuffer = file.buffer;
+  let fileName = `report.${fileExtension}`;
+
+  if (fileSizeInMB > 9) {
+    // Create a zip archive
+    const archive = archiver("zip", {
+      zlib: { level: 9 }, // Maximum compression level
+    });
+
+    const writableBuffer = new streamBuffers.WritableStreamBuffer({
+      initialSize: 100 * 1024, // Start with 100 kilobytes
+      incrementAmount: 10 * 1024, // Grow by 10 kilobytes each time buffer overflows
+    });
+
+    archive.pipe(writableBuffer);
+    archive.append(file.buffer, { name: `report.${fileExtension}` });
+    await archive.finalize();
+
+    fileBuffer = writableBuffer.getContents();
+    fileName = `report.zip`;
+  }
+
   // Create a Nodemailer transporter using your email service
   const transporter = nodemailer.createTransport({
     service: "gmail", // e.g., 'gmail'
@@ -130,8 +159,8 @@ router.post("/send-report", upload.single("file"), async (req, res) => {
         text: "Please find attached report.",
         attachments: [
           {
-            filename: `report.${fileExtension}`, // Dynamic filename based on file extension
-            content: file.buffer,
+            filename: fileName, // Dynamic filename based on file extension and compression
+            content: fileBuffer,
           },
         ],
       };
