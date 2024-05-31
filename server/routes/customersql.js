@@ -35,7 +35,6 @@ const getCompaniesDataHandler = async (req, res) => {
   }
 };
 
-// Route to send report
 // router.post("/send-report", upload.single("file"), async (req, res) => {
 //   const { email } = req.body;
 //   const file = req.file;
@@ -51,29 +50,45 @@ const getCompaniesDataHandler = async (req, res) => {
 //       user: process.env.EMAIL_USER,
 //       pass: process.env.EMAIL_PASSWORD,
 //     },
+//     secure: true, // true for 465, false for other ports
 //   });
 
-//   // Email options
-//   const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: email,
-//     subject: "Report",
-//     text: "Please find attached report.",
-//     attachments: [
-//       {
-//         filename: "report.xlsx",
-//         content: file.buffer,
-//       },
-//     ],
-//   };
+//   // Verify the connection configuration
+//   transporter.verify(function (error, success) {
+//     if (error) {
+//       console.log(error);
+//       res
+//         .status(500)
+//         .send("Error verifying email configuration: " + error.message);
+//     } else {
+//       console.log("Server is ready to take our messages");
 
-//   try {
-//     // Send email
-//     await transporter.sendMail(mailOptions);
-//     res.status(200).send("Email sent successfully");
-//   } catch (error) {
-//     res.status(500).send("Error sending email: " + error.message);
-//   }
+//       // Email options
+//       const mailOptions = {
+//         from: process.env.EMAIL_USER,
+//         to: email,
+//         subject: "Report",
+//         text: "Please find attached report.",
+//         attachments: [
+//           {
+//             filename: "report.xlsx",
+//             content: file.buffer,
+//           },
+//         ],
+//       };
+
+//       // Send email
+//       transporter.sendMail(mailOptions, (err, info) => {
+//         if (err) {
+//           console.error("Error sending email:", err);
+//           res.status(500).send("Error sending email: " + err.message);
+//         } else {
+//           console.log("Email sent successfully:", info.response);
+//           res.status(200).send("Email sent successfully");
+//         }
+//       });
+//     }
+//   });
 // });
 
 router.post("/send-report", upload.single("file"), async (req, res) => {
@@ -83,6 +98,9 @@ router.post("/send-report", upload.single("file"), async (req, res) => {
   if (!email || !file) {
     return res.status(400).send("Email and file are required");
   }
+
+  // Determine the file extension
+  const fileExtension = file.originalname.split(".").pop();
 
   // Create a Nodemailer transporter using your email service
   const transporter = nodemailer.createTransport({
@@ -112,7 +130,7 @@ router.post("/send-report", upload.single("file"), async (req, res) => {
         text: "Please find attached report.",
         attachments: [
           {
-            filename: "report.xlsx",
+            filename: `report.${fileExtension}`, // Dynamic filename based on file extension
             content: file.buffer,
           },
         ],
