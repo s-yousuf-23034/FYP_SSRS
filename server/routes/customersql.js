@@ -200,8 +200,24 @@ router.post("/add-report", async (req, res) => {
   }
 });
 
+// // Fetch reports by organization
+// router.get("/get-reports", async (req, res) => {
+//   const { orgId } = req.body;
+
+//   try {
+//     const organization = await Organization.findById(orgId);
+//     if (!organization) {
+//       return res.status(404).json({ message: "Organization not found" });
+//     }
+
+//     res.status(200).json(organization.reports);
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error", error });
+//   }
+// });
+
 // Fetch reports by organization
-router.get("/get-reports", async (req, res) => {
+router.post("/get-reports", async (req, res) => {
   const { orgId } = req.body;
 
   try {
