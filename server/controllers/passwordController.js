@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { sendPasswordResetEmail } from "../utils/emailUtils.js";
 import { generateToken } from "../utils/tokenUtils.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 
 export const forgetPassword = async (req, res) => {
   try {

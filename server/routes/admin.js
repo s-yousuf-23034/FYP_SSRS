@@ -7,8 +7,7 @@ import {
   modifyOrganization,
   removeOrganization,
   getAllOrganizations,
-  // createReport,
-  // assignReport,
+
 } from "../controllers/admin.js";
 import { verifyTokenAndRole } from "../middleware/auth.js";
 
@@ -100,51 +99,10 @@ router.post(
   removeOrganization
 );
 
-// router.get(
-//   "/getAllOrganizations",
-//   verifyTokenAndRole,
-//   (req, res, next) => {
-//     // Check if the user has admin role before executing removeOrganization function
-//     if (req.user.role === "admin") {
-//       next();
-//     } else {
-//       res.status(403).send("Unauthorized role");
-//     }
-//   },
-//   getAllOrganizations
-// );
+
 
 // Get all organizations without token and role verification
 router.get("/getAllOrganizations", getAllOrganizations);
 
-// Report Management
-
-// router.post(
-//   "/createReport",
-//   verifyTokenAndRole,
-//   (req, res, next) => {
-//     // Check if the user has admin role before executing createUser function
-//     if (req.user.role === "admin") {
-//       next();
-//     } else {
-//       res.status(403).send("Unauthorized role");
-//     }
-//   },
-//   createReport
-// );
-
-// router.post(
-//   "/assignReport",
-//   verifyTokenAndRole,
-//   (req, res, next) => {
-//     // Check if the user has admin role before executing createUser function
-//     if (req.user.role === "admin") {
-//       next();
-//     } else {
-//       res.status(403).send("Unauthorized role");
-//     }
-//   },
-//   assignReport
-// );
 
 export default router;

@@ -1,5 +1,5 @@
 import { register } from "./auth.js"; // Assuming the register function is exported from auth.js
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import User from "../models/User.js";
 import Organization from "../models/Organization.js";
 import Report from "../models/Report.js";
@@ -14,38 +14,6 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Function to modify an existing user by admin
-// export const modifyUser = async (req, res) => {
-//   try {
-//     const userId = req.body.userId; // Assuming the user's MongoDB _id is passed as a parameter in the request body
-//     const { firstName, lastName, email, password, role } = req.body;
-
-//     const salt = await bcrypt.genSalt();
-//     const passwordHash = await bcrypt.hash(password, salt);
-
-//     // Find the user by MongoDB _id and update their details
-//     const updatedUser = await User.findByIdAndUpdate(
-//       userId,
-//       {
-//         firstName,
-//         lastName,
-//         email,
-//         password: passwordHash, // Again, password should be hashed before updating in the database
-//         role,
-//       },
-//       { new: true } // Return the updated user object
-//     );
-//     const savedUser = await updatedUser.save();
-
-//     if (!updatedUser) {
-//       return res.status(404).json({ msg: "User not found" });
-//     }
-
-//     res.status(200).json(updatedUser); // Return the updated user object
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
 
 export const modifyUser = async (req, res) => {
   try {
@@ -255,63 +223,3 @@ export const getAllOrganizations = async (req, res) => {
   }
 };
 
-// Report Managament
-
-// export const createReport = async (req, res) => {
-//   const { title, description, URL, createdByEmail } = req.body;
-
-//   if (!title || !description || !URL || !createdByEmail) {
-//     return res.status(400).send("All fields are required");
-//   }
-
-//   try {
-//     // Find the user by email
-//     const user = await User.findOne({ email: createdByEmail });
-//     if (!user) {
-//       return res.status(404).send("User not found");
-//     }
-
-//     const report = new Report({ title, description, URL, createdBy: user._id });
-//     console.log("Hi");
-//     await report.save();
-//     res.status(201).send(report);
-//   } catch (error) {
-//     res.status(500).send(error.message);
-//   }
-// };
-
-// export const assignReport = async (req, res) => {
-//   const { reportURL, customerEmail } = req.body;
-
-//   if (!reportURL || !customerEmail) {
-//     return res
-//       .status(400)
-//       .send("Both reportURL and customerEmail are required");
-//   }
-
-//   try {
-//     // Find the report by URL
-//     const report = await Report.findOne({ URL: reportURL });
-//     if (!report) {
-//       return res.status(404).send("Report not found");
-//     }
-
-//     // Find the customer by email
-//     const customer = await User.findOne({ email: customerEmail });
-//     if (!customer) {
-//       return res.status(404).send("Customer not found");
-//     }
-
-//     // Check if the report is already assigned to the customer
-//     if (!report.customers.includes(customer._id)) {
-//       report.customers.push(customer._id);
-//       customer.reports.push(report._id);
-//       await customer.save();
-//     }
-
-//     await report.save();
-//     res.status(200).send(report);
-//   } catch (error) {
-//     res.status(500).send(error.message);
-//   }
-// };
